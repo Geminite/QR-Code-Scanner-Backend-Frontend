@@ -1,0 +1,57 @@
+{% if user.is_authenticated %}
+<script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+<h1>Welcome, {{user.username}}</h1>
+
+<form action="logout" method="GET">
+    <button>Log Out</button>
+</form>
+{% for rewardpoint in callname %}
+    {% if rewardpoint.name == user.username %}
+        <h1>You have {{rewardpoint.value}} Reward Points</h1>
+    
+    {% endif %}  
+{% endfor %}
+<form id="Backlog_List">
+    {% csrf_token %}
+    <input type="text" name="account_name" id="account_name" value="{{user.username}}"/>
+</form>
+
+<h3>You scanned the QR code during these times.</h3>
+<div id="display">
+    
+</div>
+
+<script>
+    $(document).ready(function(){
+    
+    setInterval(function(){
+        $.ajax({
+            type: 'POST',
+            url : "/backlog_list",
+            data:{
+                  account_name:$('#account_name').val(),
+                  csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                },
+            success: function(response){
+                console.log(response);
+                $("#display").empty();
+                for (var key in response.access_log)
+                {
+                    var temp="<div class='container darker'><span class='time-left'>"+response.access_log[key].date+"</span></div>";
+                    $("#display").append(temp);
+                }
+            },
+            error: function(response){
+                alert('An error occured')
+            }
+        });
+    },1000);
+    })
+</script>
+
+{% else %}  
+<h1>Please Log In First</h1>
+<form action="login" method="GET">
+    <button>Log In</button>
+</form> 
+{% endif %}

@@ -1,0 +1,26 @@
+<script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+<form id="post-form">
+    {% csrf_token %}
+    <input type="text" name="username_test" id="username_test" value="world"/>
+    <input type="text" name="room_id" id="room_id" value="try2"/>
+    <input type="submit" value="Send">
+</form>
+
+<script type="text/javascript">
+    $(document).on('submit','#post-form',function(e){
+      e.preventDefault();
+  
+      $.ajax({
+        type:'POST',
+        url:'/test_try',
+        data:{
+            room_id:$('#room_id').val(),
+          csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+        },
+        success: function(data){
+           //alert(data)
+        }
+      });
+      document.getElementById('username_test').value = ''
+    });
+  </script>

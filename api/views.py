@@ -93,7 +93,7 @@ def result(request):
     return render(request, 'result.html')
 
 def test_page(request):
-    return render(request, 'test_page.html')
+    return render(request, 'pages-register.html')
 
 def test_try(request):
 

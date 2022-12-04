@@ -65,6 +65,13 @@
                   <div class="pt-4 pb-2">
                     <h5 class="card-title text-center pb-0 fs-4">Create an Account</h5>
                     <p class="text-center small">Enter your personal details to create account</p>
+
+                    {% for message in messages %}
+                      <div class="text-danger text-center">
+                        <small>{{message}}</small>
+                      </div>  
+                    {% endfor %}
+
                   </div>
 
                   <form class="row g-3 needs-validation" novalidate method="POST" action="register">
@@ -96,13 +103,7 @@
                       <label for="yourPassword2" class="form-label">Repeat Password</label>
                       <input type="password" name="password2" class="form-control" id="password2" required>
                       <div class="invalid-feedback">Please enter your password!</div> 
-                       
-                      {% for message in messages %}
-                      <div class="text-danger">
-                        <small>{{message}}</small>
-                      </div>  
-                      {% endfor %}
-
+              
                     </div>
 
                     <div class="col-12">

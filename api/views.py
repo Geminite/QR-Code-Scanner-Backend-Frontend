@@ -18,17 +18,17 @@ def register(request):
         
         if password == password2:
             if User.objects.filter(email=email).exists():
-                messages.info(request, 'Email Already Used')
+                messages.info(request, 'Email is already used!')
                 return redirect('register')
             elif User.objects.filter(username=username).exists():
-                messages.info(request, 'Username Already Used')
+                messages.info(request, 'Username is already used!')
                 return redirect('register')
             else:
                 user = User.objects.create_user(username=username, email=email, password=password)
                 user.save();
                 return redirect('login')
         else:
-            messages.info(request, 'Passwod is not the same')
+            messages.info(request, 'Password is not the same!')
             return redirect('register')
     else:
         return render(request, 'register.html')
@@ -49,7 +49,7 @@ def login(request):
                 return redirect('dashboard')
 
         else:
-            messages.info(request, 'Credentials Invalid')
+            messages.info(request, 'Credentials are invalid!')
             return redirect('login')
     
     else:

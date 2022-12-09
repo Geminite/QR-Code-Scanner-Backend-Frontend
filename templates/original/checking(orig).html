@@ -1,0 +1,116 @@
+{% load static %}
+<html>
+  <script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+  <head>
+    <title>Html Qrcode Scannner</title>
+  
+  <body>
+    <div id="qr-reader" style="width:500px"></div>
+    <div id="qr-reader-results"></div>
+  </body>
+  <script src="{% static 'js/html5-qrcode.min.js' %}"></script>
+  <script>
+  function docReady(fn) {
+      // see if DOM is already available
+      if (document.readyState === "complete" || document.readyState === "interactive") {
+          // call on next available tick
+          setTimeout(fn, 1);
+      } else {
+          document.addEventListener("DOMContentLoaded", fn);
+      }
+  } 
+
+  docReady(function() {
+      var resultContainer = document.getElementById('qr-reader-results');
+      var lastResult, countResults = 0;
+      
+      var html5QrcodeScanner = new Html5QrcodeScanner(
+          "qr-reader", { fps: 10, qrbox: 250 });
+      
+      function onScanSuccess(decodedText, decodedResult) {
+          if (decodedText !== lastResult) {
+              ++countResults;
+              lastResult = decodedText;
+              console.log(`Scan result = ${decodedText}`, decodedResult);
+              var int_result = parseInt(decodedText)
+              var final_result = int_value + int_result
+              console.log(final_result)
+              document.getElementById("final_result").value = final_result
+              resultContainer.innerHTML += `<div>[${countResults}] - ${decodedText}</div>`;
+              
+              $(document).ready(function(){
+
+                $.ajax({
+                type:'POST',
+                url:'/backlog',
+                data:{
+                  account_name:$('#account_name').val(),
+                  csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                },
+                success: function(data){
+                  alert(data)
+                }
+                });
+              });
+
+
+              // Optional: To close the QR code scannign after the result is found
+              html5QrcodeScanner.clear();
+          }
+      }
+      
+      // Optional callback for error, can be ignored.
+      function onScanError(qrCodeError) {
+          // This callback would be called in case of qr code scan error or setup error.
+          // You can avoid this callback completely, as it can be very verbose in nature.
+      }
+      
+      html5QrcodeScanner.render(onScanSuccess, onScanError);
+  });
+  </script>
+ 
+  <div class="container">
+    <form id="QRresult">
+      {% csrf_token %}
+      <label for="user">{{user.username}}</label><br>
+      <input type="text" name="account_name" id="account_name" value="{{user.username}}"/>
+      <input type="text" name="final_result" id="final_result" value=""/>  <!-- Is this still needed? -->
+      {% for rewardpoint in rewards_points %}
+        {% if rewardpoint.name == user.username %}
+
+        <script type="text/javascript">
+        var initial_value = '{{rewardpoint.value}}';
+        var int_value = parseInt(initial_value);
+        console.log(int_value);
+        </script>
+
+        <input type="text" name="initial_value" id="initial_value" value="{{rewardpoint.value}}" width="100px" readonly="readonly" /><br>
+    
+        {% endif %}  
+      {% endfor %}
+      <input type="submit" value="send">
+    </form>
+  </div>
+
+  <script type="text/javascript">
+    $(document).on('submit','#QRresult',function(e){
+      e.preventDefault();
+  
+      $.ajax({
+        type:'POST',
+        url:'/send',
+        data:{
+            account_name:$('#account_name').val(),
+            final_result:$('#final_result').val(),
+          csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+        },
+        success: function(data){
+           alert(data)
+        }
+      });
+      //document.getElementById('names').value = ''
+    });
+  </script>
+
+  </head>
+</html>

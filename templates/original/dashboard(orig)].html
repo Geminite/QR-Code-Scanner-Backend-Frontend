@@ -1,0 +1,76 @@
+{% if user.is_authenticated %}
+<script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+<h1>Welcome, {{user.username}}</h1>
+
+<form action="logout" method="GET">
+    <button>Log Out</button>
+</form>
+{% for rewardpoint in callname %}
+    {% if rewardpoint.name == user.username %}
+        <h1>You have {{rewardpoint.value}} Reward Points</h1>
+    
+    {% endif %}  
+{% endfor %}
+<form id="Backlog_List">
+    {% csrf_token %}
+    <input type="hidden" name="account_name" id="account_name" value="{{user.username}}" readonly="readonly"/>
+</form>
+
+<h3>You scanned the QR code during these times.</h3>
+<div id="display">
+    
+</div>
+
+<script>
+    $(document).ready(function(){
+    
+    setInterval(function(){
+        $.ajax({
+            type: 'POST',
+            url : "/backlog_list",
+            data:{
+                  account_name:$('#account_name').val(),
+                  csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                },
+            success: function(response){
+                console.log(response);
+                $("#display").empty();
+                for (var key in response.access_log)
+                {
+                    // Parse the date value from the response into a date object
+                    var date = new Date(response.access_log[key].date);
+
+                    // Use the toLocaleDateString() function to format the date as "Jan. 10, 2000"
+                    var dateString = date.toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric'
+                    });
+
+                    // Use the toLocaleTimeString() function to format the time as "9:30:20 A.M."
+                    var timeString = date.toLocaleTimeString('en-US', {
+                        hour: 'numeric',
+                        minute: 'numeric',
+                        second: 'numeric',
+                        hour12: true
+                    });
+
+                    // Append the formatted date and time to the HTML
+                    var temp="<div class='container darker'><span class='time-left'>" + dateString + ", " + timeString + "</span></div>";
+                    $("#display").append(temp);
+                }
+            },
+            error: function(response){
+                alert('An error occurred')
+            }
+        });
+    },1000);
+    })
+</script>
+
+{% else %}  
+<h1>Please Log In First</h1>
+<form action="login" method="GET">
+    <button>Log In</button>
+</form> 
+{% endif %}

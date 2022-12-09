@@ -80,7 +80,7 @@ def send(request):
     final_result = request.POST['final_result']
 
     new_message = RewardPoints.objects.filter(name=account_name).update(value=final_result)
-    return HttpResponse('Message sent successfully') #for some reason throws out internal error without this???
+    return HttpResponse('This has been added to your account.') #for some reason throws out internal error without this???
 
 def backlog(request):
     account_name = request.POST['account_name']
@@ -93,7 +93,7 @@ def result(request):
     return render(request, 'result.html')
 
 def test_page(request):
-    return render(request, 'pages-register.html')
+    return render(request, 'dashboard_new.html')
 
 def test_try(request):
 

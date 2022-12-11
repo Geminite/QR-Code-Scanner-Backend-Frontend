@@ -30,6 +30,7 @@
 
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+  <link href="{% static 'style.css' %}" rel="stylesheet">
 
   <!-- =======================================================
   * Template Name: NiceAdmin - v2.4.1
@@ -128,12 +129,16 @@
                   <div class="container">
                     <form id="QRresult">
                       {% csrf_token %}
+                      
+                      <input type="hidden" name="account_name" id="account_name" value="{{user.username}}"/>
+                      <input type="hidden" name="final_result" id="final_result" value=""/>  <!-- Is this still needed? -->
                       <h5 class="card-title text-center pt-4 pb-2" name="account_name" id="account_name">You are currently logged in as "{{user.username}}"</h5><br>
                       
                       <div class="pb-2">
                         <div id="qr-reader" style="width:500px"></div>
                         <div id="qr-reader-results"></div>
                       </div>
+                      
 
                       {% for rewardpoint in rewards_points %}
                         {% if rewardpoint.name == user.username %}
@@ -144,15 +149,14 @@
                         console.log(int_value);
                         </script>
 
-                        
                         <h5 name="initial_value" class="card-title" id="initial_value">Current Points: {{rewardpoint.value}}</h5>
                     
                         {% endif %}  
                       {% endfor %}
                       
-                      <h5 class="card-title"  name="final_result" id="final_result">Final Points: <span id="result"></span></h5>
+                      <h5 class="card-title-personal"  name="final_result" id="final_result">Final Points: <span class="card-title" id="result"></span></h5>
               
-                      <div class="text-center"><input type="submit" value="Submit"></div>
+                      <div class="text-center"><input type="submit" value="send"></div>
                       
                     </form>
                   </div>

@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
-from .models import RewardPoints, Log
+from .models import RewardPoints, Log, Allocation
 from django.http import HttpResponse, JsonResponse
 # Create your views here.
 def root(request):
@@ -68,7 +68,7 @@ def qrscanner(request):
 
 def checking(request):
     rewards_points = RewardPoints.objects.all()
-    return render(request, 'checking.html',{'rewards_points': rewards_points})  #initial value is zero - must change value to database value
+    return render(request, 'checking.html',{'rewards_points': rewards_points})  #initial value is zero - must change value to database(update points?) value
 
 def backlog_list(request): 
     account_name = request.POST['account_name']
@@ -93,13 +93,27 @@ def result(request):
     return render(request, 'result.html')
 
 def test_page(request):
-    return render(request, 'dashboard_new.html')
+    return render(request, 'test_page.html')
 
 def test_try(request):
-
     room = request.POST['room_id']
-
 
     new_message = RewardPoints.objects.create(name=room)
     new_message.save()
     return HttpResponse('Message sent successfully')
+
+def qrgenerator(request):
+    return render(request, 'qrgenerator.html')
+
+def pointsprocess(request):
+    allocationobject = Allocation.objects.all()
+    return render(request, 'pointsprocess.html',{'allocationobject': allocationobject})
+
+def qrscript(request):
+    return render(request, 'qrscript.html')
+
+def receiver_update(request):
+    account_name = request.POST['account_name']
+    find = 'A'
+    new_receiver = Allocation.objects.filter(placeholder=find).update(receiver=account_name)
+    return HttpResponse('Your Reward Points are now being processed.')

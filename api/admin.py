@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import RewardPoints, Log
+from .models import RewardPoints, Log, Allocation
 
 # Register your models here.
 
@@ -8,3 +8,4 @@ class info(admin.ModelAdmin):
     
 admin.site.register(RewardPoints, info)
 admin.site.register(Log)
+admin.site.register(Allocation)

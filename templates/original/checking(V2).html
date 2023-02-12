@@ -31,11 +31,6 @@
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
   <link href="{% static 'style.css' %}" rel="stylesheet">
-  <style> 
-    #myHiddenPage { 
-      display: none;
-    } 
-  </style>
 
   <!-- =======================================================
   * Template Name: NiceAdmin - v2.4.1
@@ -66,12 +61,10 @@
 
                 <div class="card-body">
                   
-                  <script src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+                  <script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
 
                   <script src="{% static 'js/html5-qrcode.min(2.3.4).js' %}"></script>
-
-                  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-
+                  
                   <script>
                   function docReady(fn) {
                       // see if DOM is already available
@@ -95,10 +88,13 @@
                               ++countResults;
                               lastResult = decodedText;
                               console.log(`Scan result = ${decodedText}`, decodedResult);
+                              var int_result = parseFloat(decodedText)
+                              var final_result = int_value + int_result
+                              console.log(final_result)
+                              document.getElementById("final_result").value = final_result
+                              document.getElementById("result").innerHTML = final_result
+                              resultContainer.innerHTML += `<div class="col-12"><h5 class="card-title text-center pb-0">This has a value of ${decodedText} reward points.</h5></div>`;
                               
-                              
-                              $('#myHiddenPage').load(decodedText); //For QR Script
-                             
                               $(document).ready(function(){
 
                                 $.ajax({
@@ -113,7 +109,8 @@
                                 }
                                 });
                               });
-                    
+
+
                               // Optional: To close the QR code scanning after the result is found
                               html5QrcodeScanner.clear();
                           }
@@ -141,8 +138,21 @@
                         <div id="qr-reader" style="width:500px"></div>
                         <div id="qr-reader-results"></div>
                       </div>
+                      
 
-                      <div id="myHiddenPage" class="myHiddenPage"></div> <!-- Where the script is executed -->
+                      {% for rewardpoint in rewards_points %}
+                        {% if rewardpoint.name == user.username %}
+
+                        <script type="text/javascript">
+                        var initial_value = '{{rewardpoint.value}}';
+                        var int_value = parseInt(initial_value);
+                        console.log(int_value);
+                        </script>
+
+                        <h5 name="initial_value" class="card-title" id="initial_value">Current Points: {{rewardpoint.value}}</h5>
+                    
+                        {% endif %}  
+                      {% endfor %}
                       
                       <h5 class="card-title-personal"  name="final_result" id="final_result">Final Points: <span class="card-title" id="result"></span></h5>
               
@@ -151,6 +161,25 @@
                     </form>
                   </div>
 
+                  <script type="text/javascript">
+                    $(document).on('submit','#QRresult',function(e){
+                      e.preventDefault();
+
+                      $.ajax({
+                        type:'POST',
+                        url:'/send',
+                        data:{
+                            account_name:$('#account_name').val(),
+                            final_result:$('#final_result').val(),
+                          csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                        },
+                        success: function(data){
+                          alert(data)
+                        }
+                      });
+                      //document.getElementById('names').value = ''
+                    });
+                  </script>
                 </div>
               </div>
 

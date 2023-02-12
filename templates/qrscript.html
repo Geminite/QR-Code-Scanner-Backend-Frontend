@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<script>
+
+$(document).ready(function(){
+
+    $.ajax({
+    type:'POST',
+    url:'/receiver_update',
+    data:{
+    account_name:$('#account_name').val(),
+    csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+    },
+    success: function(data){
+    alert(data)
+    }
+    });
+});
+
+console.log("Hello world!");  //Remove in final code (This is only used for testing)
+</script>
+
+</body>
+</html>

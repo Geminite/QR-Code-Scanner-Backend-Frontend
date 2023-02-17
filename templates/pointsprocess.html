@@ -1,6 +1,5 @@
 {% load static %}
 
-<link rel="stylesheet" href="{% static 'style.css' %}">
 
 <!DOCTYPE html>
 <html lang="en">
@@ -9,7 +8,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Pages / Register - NiceAdmin Bootstrap Template</title>
+  <title>Reward Points Allocation</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -32,6 +31,7 @@
 
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'style.css' %}">
 
   <!-- =======================================================
   * Template Name: NiceAdmin - v2.4.1
@@ -54,7 +54,7 @@
               <div class="d-flex justify-content-center py-4">
                 <a href="{% url 'root' %}" class="logo d-flex align-items-center w-auto">
                   <img src="{% static 'assets/img/logo.png' %}" alt="">
-                  <span class="d-none d-lg-block">Reward Points Tracker</span>
+                  <span class="d-none d-lg-block">Reward Points Allocation</span>
                 </a>
               </div><!-- End Logo -->
 
@@ -62,32 +62,80 @@
 
                 <div class="card-body">
 
+                  <script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+
                   {% if user.is_authenticated and user.is_superuser %} 
                   <div class="pt-4 pb-2">
-                    <h5 class="card-title text-center pb-0 fs-4">Allocate Points Here</h5>
+                    <h5 class="card-title text-center pb-0 fs-4">Distribute Points Here</h5>
                     <p class="text-center small">Enter the Required Details</p>
                   </div>
 
-                  <form class="row g-3"> <!-- <form class="row g-3 needs-validation" novalidate method="POST" action="register"> -->
-                             
+                  {% for rewardpoint in rewards_points %}
+                        {% if rewardpoint.name == user.username %}
+
+                        <script type="text/javascript">
+                            var initial_value = '{{rewardpoint.value}}';
+                            var float_value = parseFloat(initial_value);
+                            console.log(initial_value);
+                        </script>
+                        
+                        {% endif %}  
+                  {% endfor %}  
+
+                  <script>
+                    function process_reward() {
+                      var float_reward = parseFloat(document.getElementById("reward").value)
+                      var final_result = parseFloat(float_value + float_reward)
+                      document.getElementById("final_result").value = final_result
+                      console.log(float_reward)
+                      console.log(final_result)
+                      window.location.reload(true)
+                    }
+                  </script> 
+
+                  <form class="row g-3" method="POST" id="QRresult"> <!-- action="send" -->
+                    {% csrf_token %}
+                  
+                    <input type="hidden" name="account_name" id="account_name" value="{{user.username}}"/>
+                    <input type="hidden" name="final_result" id="final_result" value=""/>  <!-- Is this still needed? -->
+                    <h5 class="card-title text-center pt-4 pb-2" name="account_name" id="account_name">You are currently logged in as "{{user.username}}"</h5><br>
+                      
                     <div class="col-12">
                       {% for allocation in allocationobject %}
                         <label for="yourReceiver" class="form-label">Receiver</label>
-                        <input type="text" name="receiver" class="form-control" id="receiver" value="{{allocation.receiver}}" required>
-                        <!-- Place Errors? -->
+                        <input type="text" name="receiver" class="form-control" id="receiver" value="{{allocation.receiver}}" required> 
                       {% endfor %}
                     </div>
 
                     <div class="col-12">
-                      <label for="yourrReward" class="form-label">Reward</label>
-                      <input type="number" name="reward" class="form-control" id="reward" required>
-                      <!-- Place Errors? -->
+                      <label for="yourReward" class="form-label">Reward</label>
+                      <input type="number" step=".01" name="reward" class="form-control" id="reward" value="" required>
                     </div>
 
                     <div class="col-12">
-                      <button class="btn btn-primary w-100" type="submit">Process Reward Points</button>
+                      <button class="btn btn-primary w-100" type="submit" onclick = "process_reward()">Process Reward Points</button>
                     </div>
                   </form>
+
+                  <script type="text/javascript">
+                    $(document).on('submit','#QRresult',function(e){
+                      e.preventDefault();
+
+                      $.ajax({
+                        type:'POST',
+                        url:'/send',
+                        data:{
+                            account_name:$('#account_name').val(),
+                            final_result:$('#final_result').val(),
+                          csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                        },
+                        success: function(data){
+                          alert(data)
+                        }
+                      });
+                      //document.getElementById('names').value = ''
+                    });
+                  </script>
 
                   {% else %} 
                     <div class="pt-4 pb-2">

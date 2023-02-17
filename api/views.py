@@ -72,7 +72,7 @@ def checking(request):
 
 def backlog_list(request): 
     account_name = request.POST['account_name']
-    access_log = Log.objects.filter(source=account_name)
+    access_log = Log.objects.filter(source=account_name).order_by('-date') #-date is used to reverse the order of the database objects
     return JsonResponse({"access_log":list(access_log.values())})
 
 def send(request):
@@ -80,7 +80,7 @@ def send(request):
     final_result = request.POST['final_result']
 
     new_message = RewardPoints.objects.filter(name=account_name).update(value=final_result)
-    return HttpResponse('This has been added to your account.') #for some reason throws out internal error without this???
+    return HttpResponse('This has been added the account specified in the receiver.') #for some reason throws out internal error without this???
 
 def backlog(request):
     account_name = request.POST['account_name']
@@ -107,7 +107,9 @@ def qrgenerator(request):
 
 def pointsprocess(request):
     allocationobject = Allocation.objects.all()
-    return render(request, 'pointsprocess.html',{'allocationobject': allocationobject})
+    rewards_points = RewardPoints.objects.all()
+    #initial value is zero - must change value to database(update points?) value
+    return render(request, 'pointsprocess.html',{'allocationobject': allocationobject,'rewards_points': rewards_points})
 
 def qrscript(request):
     return render(request, 'qrscript.html')

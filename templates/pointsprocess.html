@@ -44,6 +44,7 @@
 <body>
 
   <main>
+    <div class="row">
     <div class="container">
 
       <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
@@ -56,7 +57,7 @@
                   <img src="{% static 'assets/img/logo.png' %}" alt="">
                   <span class="d-none d-lg-block">Reward Points Allocation</span>
                 </a>
-              </div><!-- End Logo -->
+              </div>
 
               <div class="card mb-3">
 
@@ -84,21 +85,27 @@
 
                   <script>
                     function process_reward() {
-                      var float_reward = parseFloat(document.getElementById("reward").value)
+                      var float_spending = parseFloat(document.getElementById("spending").value)
+                      var float_reward = float_spending * 0.1
                       var final_result = parseFloat(float_value + float_reward)
                       document.getElementById("final_result").value = final_result
+                      $(document).ready(function(){
+                        var reward_point_value="<h5 class='card-title text-center pb-0'>You gained " + float_reward +" Reward Point(s)</h5>"; 
+                        $("#reward_point_value").append(reward_point_value);
+                      })
+                      console.log(float_spending)
                       console.log(float_reward)
                       console.log(final_result)
                       window.location.reload(true)
                     }
                   </script> 
 
-                  <form class="row g-3" method="POST" id="QRresult"> <!-- action="send" -->
+                  <form class="row g-3" method="POST" id="QRresult">
                     {% csrf_token %}
                   
                     <input type="hidden" name="account_name" id="account_name" value="{{user.username}}"/>
-                    <input type="hidden" name="final_result" id="final_result" value=""/>  <!-- Is this still needed? -->
-                    <h5 class="card-title text-center pt-4 pb-2" name="account_name" id="account_name">You are currently logged in as "{{user.username}}"</h5><br>
+                    <input type="hidden" name="final_result" id="final_result" value=""/> 
+                    <!-- <h5 class="card-title text-center pt-4 pb-2" name="account_name" id="account_name">You are currently logged in as "{{user.username}}"</h5><br> -->
                       
                     <div class="col-12">
                       {% for allocation in allocationobject %}
@@ -108,9 +115,11 @@
                     </div>
 
                     <div class="col-12">
-                      <label for="yourReward" class="form-label">Reward</label>
-                      <input type="number" step=".01" name="reward" class="form-control" id="reward" value="" required>
+                      <label for="yourReward" class="form-label">Grocery Spending</label>
+                      <input type="number" step=".01" name="spending" class="form-control" id="spending" value="" required>
                     </div>
+
+                    <div id="reward_point_value">
 
                     <div class="col-12">
                       <button class="btn btn-primary w-100" type="submit" onclick = "process_reward()">Process Reward Points</button>
@@ -162,6 +171,7 @@
       </section>
 
     </div>
+  </div>
   </main><!-- End #main -->
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>

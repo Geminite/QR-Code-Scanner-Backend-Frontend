@@ -119,3 +119,6 @@ def receiver_update(request):
     find = 'A'
     new_receiver = Allocation.objects.filter(placeholder=find).update(receiver=account_name)
     return HttpResponse('Your Reward Points are now being processed.')
+
+def qrcode(request):
+    return render(request, 'qrcode.html')

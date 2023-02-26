@@ -18,5 +18,6 @@ urlpatterns = [
     path('qrgenerator', views.qrgenerator, name="qrgenerator"), #QR Code Generator
     path('pointsprocess', views.pointsprocess, name="pointsprocess"), #Points Processing Page
     path('qrscript', views.qrscript, name="qrscript"), #Page containing the script that will be executed after scaning the QR Code
-    path('receiver_update', views.receiver_update, name="receiver_update") #Allows redirection to the receiver_update function
+    path('receiver_update', views.receiver_update, name="receiver_update"), #Allows redirection to the receiver_update function
+    path('qrcode', views.qrcode, name="qrcode")
 ]

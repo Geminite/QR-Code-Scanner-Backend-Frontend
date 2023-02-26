@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>HTML Qrcode Scannner</title>
+  <title>QR Code Scannner</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -31,6 +31,7 @@
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
   <link href="{% static 'style.css' %}" rel="stylesheet">
+
   <style> 
     #myHiddenPage { 
       display: none;
@@ -60,7 +61,7 @@
                   <img src="{% static 'assets/img/logo.png' %}" alt="">
                   <span class="d-none d-lg-block">QR Code Scanner</span>
                 </a>
-              </div><!-- End Logo -->
+              </div>
 
               <div class="card mb-3">
 
@@ -72,6 +73,7 @@
 
                   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 
+                  {% if user.is_authenticated and user.is_superuser %}
                   <script>
                   function docReady(fn) {
                       // see if DOM is already available
@@ -115,7 +117,7 @@
                               });
                     
                               // Optional: To close the QR code scanning after the result is found
-                              html5QrcodeScanner.clear();
+                              //html5QrcodeScanner.clear();
                           }
                       }
                       
@@ -134,23 +136,30 @@
                       {% csrf_token %}
                       
                       <input type="hidden" name="account_name" id="account_name" value="{{user.username}}"/>
-                      <input type="hidden" name="final_result" id="final_result" value=""/>  <!-- Is this still needed? -->
-                      <h5 class="card-title text-center pt-4 pb-2" name="account_name" id="account_name">You are currently logged in as "{{user.username}}"</h5><br>
+                      <h5 class="card-title text-center" name="account_name" id="account_name">You are currently logged in as "{{user.username}}"</h5><br>
                       
-                      <div class="pb-2">
+                      <div class="pb-4">
                         <div id="qr-reader" style="width:500px"></div>
                         <div id="qr-reader-results"></div>
                       </div>
 
                       <div id="myHiddenPage" class="myHiddenPage"></div> <!-- Where the script is executed -->
-                      
-                      <h5 class="card-title-personal"  name="final_result" id="final_result">Final Points: <span class="card-title" id="result"></span></h5>
-              
-                      <div class="text-center"><input type="submit" value="send"></div>
-                      
                     </form>
+
+                    <div class="col-12">
+                      <form action="dashboard" method="POST">
+                        {% csrf_token %}
+                        <button class="btn btn-primary w-100" type="submit">Return to Dashboard</button>
+                      </form>
+                    </div>
                   </div>
 
+                  {% else %} 
+                    <div class="pt-4 pb-2">
+                      <h5 class="card-title text-center pb-0 fs-4">You Cannot Access This Page</h5>
+                      <p class="text-center small">You need to be logged in</p>
+                    </div>
+                  {% endif %}
                 </div>
               </div>
 

@@ -68,7 +68,17 @@ def qrscanner(request):
 
 def checking(request):
     rewards_points = RewardPoints.objects.all()
-    return render(request, 'checking.html',{'rewards_points': rewards_points})  #initial value is zero - must change value to database(update points?) value
+
+    find = 'A'
+    if Allocation.objects.filter(placeholder=find).exists():
+        check_allocation = '1'
+        return render(request, 'checking.html',{'rewards_points': rewards_points, 'check_allocation':check_allocation})  
+    
+    else:
+        check_allocation = '0'
+        return render(request, 'checking.html',{'rewards_points': rewards_points, 'check_allocation':check_allocation})  
+
+    
 
 def backlog_list(request): 
     account_name = request.POST['account_name']
@@ -87,6 +97,9 @@ def backlog(request):
 
     new_log = Log.objects.create(source=account_name) 
     new_log.save()
+
+    new_allocation = Allocation.objects.create(receiver=account_name)
+    new_allocation.save()
     return HttpResponse('Log is recorded')
 
 def result(request):
@@ -116,9 +129,16 @@ def qrscript(request):
 
 def receiver_update(request):
     account_name = request.POST['account_name']
-    find = 'A'
-    new_receiver = Allocation.objects.filter(placeholder=find).update(receiver=account_name)
+    new_receiver = Allocation.objects.create(receiver=account_name)
     return HttpResponse('Your Reward Points are now being processed.')
 
 def qrcode(request):
     return render(request, 'qrcode.html')
+
+def delete_receiver(request):
+    find = 'A'
+    remove_receiver = Allocation.objects.get(placeholder=find)
+    remove_receiver.delete()
+    return HttpResponse('Transaction has now been cleared')
+
+

@@ -67,11 +67,11 @@
 
                 <div class="card-body">
                   
-                  <script src="{% static 'js/jquery-3.1.1.min.js' %}"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+                  <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
 
                   <script src="{% static 'js/html5-qrcode.min(2.3.4).js' %}"></script>
 
-                  <script src="{% static 'js/jquery.min.js' %}"></script>
+                  <!--<script src="{% static 'js/jquery.min.js' %}"></script>-->
 
                   {% if user.is_authenticated %}
                   <script>
@@ -97,10 +97,21 @@
                               ++countResults;
                               lastResult = decodedText;
                               console.log(`Scan result = ${decodedText}`, decodedResult);
+     
+                              var check_allocation = '{{check_allocation}}';     
+                              console.log(check_allocation);
                               
-                              
-                              $('#myHiddenPage').load(decodedText); //For QR Script
-                             
+                              if (decodedText = 'http://127.0.0.1:8000/qrscript' && check_allocation == 1) {
+                                alert("Processing is taking place; you will now be redirected back to your dashboard. Please wait for a while.")
+                                window.location.replace("http://127.0.0.1:8000/dashboard");
+                              }  else if (decodedText = 'http://127.0.0.1:8000/qrscript' && check_allocation == 0) {
+                                $(document).ready(function(){
+                                    $('#myHiddenPage').on(decodedText); //For QR Script
+                                });
+                              }  else {
+                                //do nothing and proceed forward
+                              }
+
                               $(document).ready(function(){
 
                                 $.ajax({

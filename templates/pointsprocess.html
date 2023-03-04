@@ -96,9 +96,45 @@
                       console.log(float_spending)
                       console.log(float_reward)
                       console.log(final_result)
+
+                      $(document).ready(function(){
+
+                        $.ajax({
+                        type:'POST',
+                        url:'/delete_receiver',
+                        data:{
+                        csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                        },
+                        success: function(data){
+                        alert(data)
+                        }
+                        });
+                      });
+
                       window.location.reload(true)
                     }
                   </script> 
+
+                  <script>
+                    function delete_receiver() {
+
+                      $(document).ready(function(){
+
+                        $.ajax({
+                        type:'POST',
+                        url:'/delete_receiver',
+                        data:{
+                        csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                        },
+                        success: function(data){
+                        alert(data)
+                        }
+                        });
+                      });
+
+                      window.location.reload(true)
+                    }
+                  </script>
 
                   <form class="row g-3" method="POST" id="QRresult">
                     {% csrf_token %}
@@ -123,6 +159,10 @@
 
                     <div class="col-12">
                       <button class="btn btn-primary w-100" type="submit" onclick = "process_reward()">Process Reward Points</button>
+                    </div>
+
+                    <div class="pt-4 pb-2">
+                      <button class="btn btn-primary w-100" type="submit" onclick = "delete_receiver()">Cancel Current Transaction</button>
                     </div>
                   </form>
 

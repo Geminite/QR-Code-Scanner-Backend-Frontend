@@ -5,7 +5,7 @@
 
 <head>
   <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="width=550" name="viewport">
 
   <title>QR Code Scannner</title>
   <meta content="" name="description">
@@ -97,20 +97,6 @@
                               ++countResults;
                               lastResult = decodedText;
                               console.log(`Scan result = ${decodedText}`, decodedResult);
-     
-                              var check_allocation = '{{check_allocation}}';     
-                              console.log(check_allocation);
-                              
-                              if (decodedText = 'http://127.0.0.1:8000/qrscript' && check_allocation == 1) {
-                                alert("Processing is taking place; you will now be redirected back to your dashboard. Please wait for a while.")
-                                window.location.replace("http://127.0.0.1:8000/dashboard");
-                              }  else if (decodedText = 'http://127.0.0.1:8000/qrscript' && check_allocation == 0) {
-                                $(document).ready(function(){
-                                    $('#myHiddenPage').on(decodedText); //For QR Script
-                                });
-                              }  else {
-                                //do nothing and proceed forward
-                              }
 
                               $(document).ready(function(){
 
@@ -126,9 +112,35 @@
                                 }
                                 });
                               });
-                    
-                              // Optional: To close the QR code scanning after the result is found
-                              //html5QrcodeScanner.clear();
+
+                              function getCurrentURL () {
+                                return window.location.origin
+                              }
+                              
+                              var url = getCurrentURL() //To make the URL adjust to the IP and Port that the server is deployed to.
+                              console.log(url)
+     
+                              var check_allocation = '{{check_allocation}}';     
+                              console.log(check_allocation);
+                              
+                              if (decodedText == '/qrscript' && check_allocation == 1) {
+                                html5QrcodeScanner.clear(); // Optional: To close the QR code scanning after the result is found
+                                alert("Processing is taking place; you will now be redirected back to your dashboard. Please wait for a while.")
+                                window.location.replace(url + "/dashboard");
+                              }  else if (decodedText == '/qrscript' && check_allocation == 0) {
+                                html5QrcodeScanner.clear(); // Optional: To close the QR code scanning after the result is found
+                                //alert("Your Reward Points are now being processed.")
+                                $(document).ready(function(){
+                                    $('#myHiddenPage').load(url + decodedText); //For QR Script
+                                });
+                                var check = url + decodedText
+                                console.log(check) 
+                                window.location.replace(url + "/dashboard");
+                              }  else {
+                                //do nothing and proceed forward
+                                html5QrcodeScanner.clear(); // Optional: To close the QR code scanning after the result is found
+                                window.location.replace(url + "/dashboard");
+                              }
                           }
                       }
                       

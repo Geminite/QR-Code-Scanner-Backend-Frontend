@@ -89,13 +89,15 @@
                       var float_reward = float_spending * 0.1
                       var final_result = parseFloat(float_value + float_reward)
                       document.getElementById("final_result").value = final_result
-                      $(document).ready(function(){
-                        var reward_point_value="<h5 class='card-title text-center pb-0'>You gained " + float_reward +" Reward Point(s)</h5>"; 
-                        $("#reward_point_value").append(reward_point_value);
-                      })
-                      console.log(float_spending)
-                      console.log(float_reward)
-                      console.log(final_result)
+
+                      //$(document).ready(function(){
+                      //  var reward_point_value="<h5 class='card-title text-center pb-0'>You gained " + float_reward +" Reward Point(s)</h5>"; 
+                      //  $("#reward_point_value").append(reward_point_value);
+                      //})
+
+                      //console.log(float_spending)
+                      //console.log(float_reward)
+                      //console.log(final_result) //Used for Testing
 
                       $(document).ready(function(){
 
@@ -110,7 +112,6 @@
                         }
                         });
                       });
-
                       window.location.reload(true)
                     }
                   </script> 
@@ -127,11 +128,10 @@
                         csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
                         },
                         success: function(data){
-                        alert(data)
                         }
                         });
                       });
-
+                      alert("Transaction has now been cleared")
                       window.location.reload(true)
                     }
                   </script>

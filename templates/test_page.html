@@ -1,5 +1,12 @@
-{% if user.is_authenticated and user.is_superuser %}
-<p> Admin </p>
-{% else %}
-<p> Not Admin </p>
-{% endif %}
+<script>
+function getCurrentURL () {
+    return window.location.origin
+  }
+  
+  var url = getCurrentURL()
+  console.log(url)
+
+  decodedText = url + '/qrscript'
+  console.log(decodedText)
+  
+</script>

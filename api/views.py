@@ -98,8 +98,6 @@ def backlog(request):
     new_log = Log.objects.create(source=account_name) 
     new_log.save()
 
-    new_allocation = Allocation.objects.create(receiver=account_name)
-    new_allocation.save()
     return HttpResponse('Log is recorded')
 
 def result(request):
@@ -129,7 +127,9 @@ def qrscript(request):
 
 def receiver_update(request):
     account_name = request.POST['account_name']
-    new_receiver = Allocation.objects.create(receiver=account_name)
+    
+    new_allocation = Allocation.objects.create(receiver=account_name)
+    new_allocation.save()
     return HttpResponse('Your Reward Points are now being processed.')
 
 def qrcode(request):

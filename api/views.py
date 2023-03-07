@@ -63,9 +63,6 @@ def logout(request):
     auth.logout(request)
     return redirect('/')
 
-def qrscanner(request):
-    return render(request, 'qrscanner.html')
-
 def checking(request):
     rewards_points = RewardPoints.objects.all()
 
@@ -76,9 +73,7 @@ def checking(request):
     
     else:
         check_allocation = '0'
-        return render(request, 'checking.html',{'rewards_points': rewards_points, 'check_allocation':check_allocation})  
-
-    
+        return render(request, 'checking.html',{'rewards_points': rewards_points, 'check_allocation':check_allocation})      
 
 def backlog_list(request): 
     account_name = request.POST['account_name']
@@ -100,21 +95,8 @@ def backlog(request):
 
     return HttpResponse('Log is recorded')
 
-def result(request):
-    return render(request, 'result.html')
-
 def test_page(request):
     return render(request, 'test_page.html')
-
-def test_try(request):
-    room = request.POST['room_id']
-
-    new_message = RewardPoints.objects.create(name=room)
-    new_message.save()
-    return HttpResponse('Message sent successfully')
-
-def qrgenerator(request):
-    return render(request, 'qrgenerator.html')
 
 def pointsprocess(request):
     allocationobject = Allocation.objects.all()
@@ -134,6 +116,9 @@ def receiver_update(request):
 
 def qrcode(request):
     return render(request, 'qrcode.html')
+
+def qrlog(request):
+    return render(request, 'qrlog.html')
 
 def delete_receiver(request):
     find = 'A'

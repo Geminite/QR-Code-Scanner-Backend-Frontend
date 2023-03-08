@@ -81,10 +81,10 @@ def backlog_list(request):
     return JsonResponse({"access_log":list(access_log.values())})
 
 def send(request):
-    account_name = request.POST['account_name']
+    receiver = request.POST['receiver']
     final_result = request.POST['final_result']
 
-    new_message = RewardPoints.objects.filter(name=account_name).update(value=final_result)
+    new_message = RewardPoints.objects.filter(name=receiver).update(value=final_result)
     return HttpResponse('This has been added the account specified in the receiver.') #for some reason throws out internal error without this???
 
 def backlog(request):

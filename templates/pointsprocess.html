@@ -72,7 +72,8 @@
                   </div>
 
                   {% for rewardpoint in rewards_points %}
-                        {% if rewardpoint.name == user.username %}
+                    {% for allocation in allocationobject %}
+                        {% if rewardpoint.name == allocation.receiver %}
 
                         <script type="text/javascript">
                             var initial_value = '{{rewardpoint.value}}';
@@ -80,7 +81,8 @@
                             console.log(initial_value);
                         </script>
                         
-                        {% endif %}  
+                        {% endif %}
+                    {% endfor %}
                   {% endfor %}  
 
                   <script>
@@ -174,7 +176,7 @@
                         type:'POST',
                         url:'/send',
                         data:{
-                            account_name:$('#account_name').val(),
+                            receiver:$('#receiver').val(),
                             final_result:$('#final_result').val(),
                           csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
                         },

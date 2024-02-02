@@ -15,6 +15,7 @@ Screenshots and Video Footage
 https://drive.google.com/drive/folders/1KUtUsy76rAf21MQMGISqq2inh65pS2vU?usp=sharing
 
 Credits
+
 HTML Template used: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
 
 QR Code Reader used: https://github.com/mebjas/html5-qrcode
